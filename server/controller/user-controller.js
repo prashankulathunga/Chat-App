@@ -1,4 +1,5 @@
 import User from "../model/UserModel.js";
+import FriendRequest from "../model/FriendRequest.js";
 
 export const getRecommendedUser = async (req, res) => {
   try {
@@ -45,10 +46,98 @@ export const getMyFriends = async (req, res) => {
 export const friendRequest = async (req, res) => {
   try {
     // implements friend requests
+
+    const myId = req.userId;
+    const { id: recipientId } = req.params;
+
+    // prevent sending req to yourself
+
+    const recipence = await User.findById(recipientId);
+
+    if (!recipientId)
+      return res
+        .status(404)
+        .json({ success: false, message: "Recipence not found" });
+
+    if (myId == recipientId)
+      return res.status(400).json({
+        success: false,
+        message: "You can not send friend request yourself",
+      });
+
+    // check alrady is friend
+    if (recipence.friends.includes(myId))
+      return res
+        .status(400)
+        .json({ success: false, message: "you are alrady friends" });
+
+    //check request alrady exists
+    const existingRequest = await FriendRequest.findOne({
+      $or: [
+        { sender: myId, recipient: recipientId },
+        { sender: recipientId, recipent: myId },
+      ],
+    });
+
+    if (existingRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "A friend request already exists betweeen you and this user",
+      });
+    }
+
+    const createFriendReq = FriendRequest.create({
+      sender: myId,
+      recipient: recipientId,
+    });
+
+    return res.status(200).json(createFriendReq);
   } catch (error) {
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
     console.log("Internal server error", error);
+  }
+};
+
+export const acceptFriendRequest = async (req, res) => {
+  try {
+    const { id: requestId } = req.params;
+
+    const friendRequest = await FriendRequest.findById(requestId);
+
+    if (!friendRequest) {
+      return res
+        .status(404)
+        .json({ success: false, message: "friend request not found" });
+    }
+
+    // verify the current user is the recipient
+    if (friendRequest.recipient.toString() !== req.userId) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized accept this friend request",
+      });
+    }
+
+    friendRequest.status = "accepted";
+    await friendRequest.save();
+
+    // add each user to the other's friends array
+    await User.findByIdAndUpdate(friendRequest.sender, {
+      $addToSet: { friends: friendRequest.recipent },
+    });
+
+    await User.findByIdAndUpdate(friendRequest.recipent, {
+      $addToSet: { friends: friendRequest.sender },
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Friend request accepted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };

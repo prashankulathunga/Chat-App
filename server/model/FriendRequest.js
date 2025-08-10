@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const FriendRequestSchema = new mongoose.Schema(
   {
     sneder: {
-      type: mongoose.Schema.Type.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     recipient: {
-      type: mongoose.Schema.Type.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -24,3 +24,4 @@ const FriendRequestSchema = new mongoose.Schema(
 const FriendRequest =
   mongoose.models.FriendRequest ||
   mongoose.model("FriendRequest", FriendRequestSchema);
+export default FriendRequest;
