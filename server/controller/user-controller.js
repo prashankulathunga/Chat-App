@@ -173,5 +173,3 @@ export const getOutgoingFriendReq = async (res, req) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
-

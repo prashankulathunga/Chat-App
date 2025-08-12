@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-application.use(verifyUser);
+router.use(verifyUser);
 
 router.get("/", getRecommendedUser);
 router.get("/friends", getMyFriends);
