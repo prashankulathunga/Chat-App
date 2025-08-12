@@ -5,7 +5,7 @@ import cors from "cors";
 import { connectDB } from "./configs/db.js";
 import cookieParser from "cookie-parser";
 
-// NOTE: Route import section
+// INFO: Route import section
 import AuthRoute from "./routes/auth-route.js";
 import UserRoute from "./routes/user-route.js";
 
@@ -24,7 +24,7 @@ app.use(
   }),
 );
 
-// NOTE: MONGO Database connection section
+// INFO: MONGO Database connection section
 await connectDB();
 
 app.get("/", (req, res) => {
