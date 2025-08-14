@@ -1,5 +1,5 @@
-import User from "../model/UserModel.js";
 import FriendRequest from "../model/FriendRequest.js";
+import User from "../model/UserModel.js";
 
 export const getRecommendedUser = async (req, res) => {
   try {
@@ -31,7 +31,7 @@ export const getMyFriends = async (req, res) => {
       .select("friends")
       .populate(
         "friends",
-        "fullName profilePic nativeLanguage leaningLangiage"
+        "fullName profilePic nativeLanguage learningLanguage"
       );
 
     return res.status(200).json(user.friends);
@@ -39,7 +39,6 @@ export const getMyFriends = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
-    console.log("Internal server error", error);
   }
 };
 
@@ -96,7 +95,6 @@ export const friendRequest = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: "Internal server error" });
-    console.log("Internal server error", error);
   }
 };
 

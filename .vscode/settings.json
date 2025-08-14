@@ -1,0 +1,6 @@
+{
+  "js/ts.implicitProjectConfig.checkJs": false,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
+}
