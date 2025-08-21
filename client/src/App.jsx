@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import NotificationPage from "./pages/NotificationPage";
 import LoginPage from "./pages/LoginPage";
 import { useAppContext } from "./context/AppContext";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <div>
+      <Toaster />
       <Routes>
         <Route path="/" element={user ? <HomePage /> : <Navigate to={'/login'} />} />
         <Route path="/login" element={user ? <Navigate to={'/'} /> : <LoginPage />} />

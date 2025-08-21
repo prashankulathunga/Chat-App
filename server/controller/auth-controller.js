@@ -15,13 +15,16 @@ export const Register = async (req, res) => {
     // need to store token cookies
 
     if (!fullname || !email || !password) {
-      return res.status(400).json({ message: "require value is missing" });
+      return res
+        .status(400)
+        .json({ success: false, message: "require value is missing" });
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "password must be atleast 6 characters" });
+      return res.status(400).json({
+        success: false,
+        message: "password must be atleast 6 characters",
+      });
     }
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -34,7 +37,10 @@ export const Register = async (req, res) => {
     const isExistsEmail = await User.findOne({ email });
 
     if (isExistsEmail) {
-      return res.send({ message: "User all ready exists. Please login" });
+      return res.status(409).json({
+        success: false,
+        message: "User all ready exists. Please login",
+      });
     }
 
     const idx = Math.floor(Math.random() * 100) + 1; // generate number between 1-100
@@ -78,7 +84,7 @@ export const Register = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      return res.send({
+      return res.status(200).json({
         message: "User saved successfully",
         data: {
           id: savedUser._id,
@@ -131,7 +137,11 @@ export const Login = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "User login successfully" });
+      .json({
+        success: true,
+        message: "User login successfully",
+        user: isExistsUser,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });

@@ -10,12 +10,10 @@ import { verifyUser } from "../middleware/authMiddleware.js";
 
 const route = express.Router();
 
-route.use(verifyUser);
-
 route.post("/create", Register);
 route.post("/login", Login);
-route.get("/logout", LogOut);
-route.post("/onboard", Onboard);
-route.get("/check-auth", CheckAuth);
+route.get("/logout", verifyUser, LogOut);
+route.post("/onboard", verifyUser, Onboard);
+route.get("/check-auth", verifyUser, CheckAuth);
 
 export default route;
