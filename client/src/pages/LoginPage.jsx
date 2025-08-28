@@ -38,6 +38,7 @@ function LoginPage() {
           setEmail("");
           setPassword("");
           setUser(response.data.user);
+          console.log(response.data.user);
           toast.success("User login successfully")
         }
       }

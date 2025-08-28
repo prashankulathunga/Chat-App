@@ -31,7 +31,7 @@ export const getMyFriends = async (req, res) => {
       .select("friends")
       .populate(
         "friends",
-        "fullName profilePic nativeLanguage learningLanguage"
+        "fullName profilePic nativeLanguage learningLanguage",
       );
 
     return res.status(200).json(user.friends);
@@ -160,7 +160,7 @@ export const getOutgoingFriendReq = async (res, req) => {
       status: "pending",
     }).populate(
       "recipient",
-      "fullname profilePic nativeLanguage learningLanguage"
+      "fullname profilePic nativeLanguage learningLanguage",
     );
 
     return res.status(200).json({ success: true });

@@ -120,28 +120,28 @@ export const Login = async (req, res) => {
 
     // need to compare password to db exists password
     const isPassword = bcrypt.compare(password, isExistsUser.password);
-    if (!isPassword)
-      return res
-        .status(404)
-        .json({ success: false, message: "Email or password incorrect" });
+    console.log(isPassword);
+    if (isPassword) {
+      const token = jwt.sign({ id: isExistsUser._id }, process.env.SECRET_KEY, {
+        expiresIn: "7d",
+      });
 
-    const token = jwt.sign({ id: isExistsUser._id }, process.env.SECRET_KEY, {
-      expiresIn: "7d",
-    });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV == "production",
+        sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
+      });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV == "production",
-      sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
-    });
-
-    return res
-      .status(200)
-      .json({
+      return res.status(200).json({
         success: true,
         message: "User login successfully",
         user: isExistsUser,
       });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "Email or password incorrect" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });

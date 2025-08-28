@@ -13,20 +13,23 @@ function App() {
 
   const { user } = useAppContext();
 
+  const isAuthenticated = Boolean(user);
+  const isOnboarded = user?.isOnboarded;
+
   return (
     <div>
       <Toaster />
       <Routes>
-        <Route path="/" element={user ? <HomePage /> : <Navigate to={'/login'} />} />
-        <Route path="/login" element={user ? <Navigate to={'/'} /> : <LoginPage />} />
-        <Route path="/signup" element={user ? <Navigate to={'/'} /> : <SignupPage />} />
-        <Route path="/notification" element={user ? <NotificationPage /> : <Navigate to={'/login'} />} />
-        <Route path="/chat-page" element={user ? <ChatPage /> : <Navigate to={'/login'} />} />
-        <Route path="/call-page" element={user ? <CallPage /> : <Navigate to={'login'} />} />
-        <Route path="/onboarding" element={user ? <OnboardingPage /> : <Navigate to={'/login'} />} />
+        <Route path="/" element={isAuthenticated && isOnboarded ? (<HomePage />) : <Navigate to={!isAuthenticated ? '/login' : "/onboarding"} />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to={'/'} /> : <LoginPage />} />
+        <Route path="/signup" element={isAuthenticated ? <Navigate to={'/'} /> : <SignupPage />} />
+        <Route path="/notification" element={isAuthenticated ? <NotificationPage /> : <Navigate to={'/login'} />} />
+        <Route path="/chat-page" element={isAuthenticated ? <ChatPage /> : <Navigate to={'/login'} />} />
+        <Route path="/call-page" element={isAuthenticated ? <CallPage /> : <Navigate to={'login'} />} />
+        <Route path="/onboarding" element={isAuthenticated ? <OnboardingPage /> : <Navigate to={'/login'} />} />
       </Routes>
     </div>
-  );
+  ); 
 }
 
 export default App;
