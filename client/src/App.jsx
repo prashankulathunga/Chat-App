@@ -10,26 +10,82 @@ import { useAppContext } from "./context/AppContext";
 import { Toaster } from "react-hot-toast";
 
 function App() {
+    const { user } = useAppContext();
 
-  const { user } = useAppContext();
+    const isAuthenticated = Boolean(user);
+    const isOnboarded = user?.isOnboarded;
 
-  const isAuthenticated = Boolean(user);
-  const isOnboarded = user?.isOnboarded;
-
-  return (
-    <div>
-      <Toaster />
-      <Routes>
-        <Route path="/" element={isAuthenticated && isOnboarded ? (<HomePage />) : <Navigate to={!isAuthenticated ? '/login' : "/onboarding"} />} />
-        <Route path="/login" element={isAuthenticated ? <Navigate to={'/'} /> : <LoginPage />} />
-        <Route path="/signup" element={isAuthenticated ? <Navigate to={'/'} /> : <SignupPage />} />
-        <Route path="/notification" element={isAuthenticated ? <NotificationPage /> : <Navigate to={'/login'} />} />
-        <Route path="/chat-page" element={isAuthenticated ? <ChatPage /> : <Navigate to={'/login'} />} />
-        <Route path="/call-page" element={isAuthenticated ? <CallPage /> : <Navigate to={'login'} />} />
-        <Route path="/onboarding" element={isAuthenticated ? <OnboardingPage /> : <Navigate to={'/login'} />} />
-      </Routes>
-    </div>
-  ); 
+    return (
+        <div>
+            <Toaster />
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        isAuthenticated && isOnboarded ? (
+                            <HomePage />
+                        ) : (
+                            <Navigate
+                                to={!isAuthenticated ? "/login" : "/onboarding"}
+                            />
+                        )
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={
+                        isAuthenticated ? <Navigate to={"/"} /> : <LoginPage />
+                    }
+                />
+                <Route
+                    path="/signup"
+                    element={
+                        isAuthenticated ? <Navigate to={"/"} /> : <SignupPage />
+                    }
+                />
+                <Route
+                    path="/notification"
+                    element={
+                        isAuthenticated ? (
+                            <NotificationPage />
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/chat-page"
+                    element={
+                        isAuthenticated ? (
+                            <ChatPage />
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/call-page"
+                    element={
+                        isAuthenticated ? (
+                            <CallPage />
+                        ) : (
+                            <Navigate to={"login"} />
+                        )
+                    }
+                />
+                <Route
+                    path="/onboarding"
+                    element={
+                        isAuthenticated ? (
+                            <OnboardingPage />
+                        ) : (
+                            <Navigate to={"/login"} />
+                        )
+                    }
+                />
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
